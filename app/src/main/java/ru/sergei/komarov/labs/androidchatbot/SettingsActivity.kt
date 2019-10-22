@@ -13,7 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.sergei.komarov.labs.androidchatbot.utils.CommonUtils
 
-class MainActivity : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity() {
 
     lateinit var textView: TextView
 
@@ -21,9 +21,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val layoutId =
             if (CommonUtils.isVerticalOrientation(resources))
-                R.layout.activity_main
+                R.layout.activity_settings
             else
-                R.layout.activity_main_horizontal
+                R.layout.activity_settings_horizontal
         setContentView(layoutId)
         setSupportActionBar(toolbar)
 
@@ -59,14 +59,14 @@ class MainActivity : AppCompatActivity() {
     private val onClickListener: View.OnClickListener = ButtonClickHandler(this)
 
     class ButtonClickHandler : View.OnClickListener {
-        var context: MainActivity
+        var context: SettingsActivity
 
-        constructor(context: MainActivity) {
+        constructor(context: SettingsActivity) {
             this.context = context
         }
 
         override fun onClick(v: View?) {
-            val changePageIntent = Intent(context, SettingsActivity::class.java)
+            val changePageIntent = Intent(context, MainActivity::class.java)
             context.startActivity(changePageIntent)
         }
     }

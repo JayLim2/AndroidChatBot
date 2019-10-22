@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".SettingsActivity"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -18,9 +18,10 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorIndigo"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main_horizontal" />
+    <include layout="@layout/content_settings" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -29,7 +30,8 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_menu_edit"
-        app:backgroundTint="@color/colorRed"
+        app:backgroundTint="@color/colorIndigo"
+
         />
 
 </FrameLayout>
