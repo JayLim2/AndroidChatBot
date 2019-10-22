@@ -1,5 +1,6 @@
 package ru.sergei.komarov.labs.androidchatbot
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.sergei.komarov.labs.androidchatbot.utils.CommonUtils
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,7 +18,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        val layoutId =
+            if (CommonUtils.isVerticalOrientation(resources))
+                R.layout.activity_main
+            else
+                R.layout.activity_main_horizontal
+        setContentView(layoutId)
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
