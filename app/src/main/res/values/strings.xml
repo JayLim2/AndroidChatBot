@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">AndroidChatBot</string>
+    <string name="app_name">Собеседник</string>
+    <string name="action_settings">Настройки</string>
 </resources>
