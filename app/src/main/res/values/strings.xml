@@ -1,10 +1,16 @@
 <resources>
-    <string name="action_settings">Settings</string>
+    <!-- headers -->
     <string name="app_name">ChatBot</string>
+    <string name="settings_name">Settings</string>
+    <string name="chat_name">Current chat</string>
+
+    <!-- menu items -->
+    <string name="action_settings">Settings</string>
+
+    <!-- other -->
     <string name="en_locale">English</string>
     <string name="ru_locale">Русский</string>
     <string name="select_locale_label">Select language:</string>
     <string name="main_label">Touch button at bottom right corner of screen to start/open chat</string>
-    <string name="chat_label">Current chat</string>
     <string name="title_item_detail">Item Detail</string>
 </resources>

@@ -4,12 +4,15 @@ import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
+import ru.sergei.komarov.labs.androidchatbot.ChatActivity
+import ru.sergei.komarov.labs.androidchatbot.MainActivity
 import ru.sergei.komarov.labs.androidchatbot.R
+import ru.sergei.komarov.labs.androidchatbot.SettingsActivity
 import java.util.*
 
 class CommonUtils {
     companion object {
-        var DEFAULT_LOCALE:Locale? = Locale("ru")
+        var DEFAULT_LOCALE: Locale? = Locale("ru")
 
         fun isVerticalOrientation(resources: Resources): Boolean {
             return resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
@@ -27,7 +30,15 @@ class CommonUtils {
                 config,
                 baseContext.resources.displayMetrics
             )
-            activity.setTitle(R.string.app_name)
+
+            //title configuring
+            val titleId: Int =
+                when (activity) {
+                    is SettingsActivity -> R.string.settings_name
+                    is ChatActivity -> R.string.chat_name
+                    else -> R.string.app_name
+                }
+            activity.setTitle(titleId)
         }
     }
 }

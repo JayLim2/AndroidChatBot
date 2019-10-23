@@ -4,7 +4,7 @@ import android.content.Intent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
-import ru.sergei.komarov.labs.androidchatbot.ItemListActivity
+import ru.sergei.komarov.labs.androidchatbot.ChatActivity
 
 class WriteButtonClickHandler<T : AppCompatActivity> : View.OnClickListener {
     var context: T
@@ -14,7 +14,7 @@ class WriteButtonClickHandler<T : AppCompatActivity> : View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-        val intent = Intent(context, ItemListActivity::class.java)
+        val intent = Intent(context, ChatActivity::class.java)
         context.startActivity(intent)
 
         if(false) {

@@ -2,28 +2,27 @@ package ru.sergei.komarov.labs.androidchatbot
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 
 import ru.sergei.komarov.labs.androidchatbot.dummy.DummyContent
-import kotlinx.android.synthetic.main.activity_item_list.*
+import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.chat_system_message.view.*
 import kotlinx.android.synthetic.main.item_list.*
+import ru.sergei.komarov.labs.androidchatbot.utils.CommonUtils
 import java.util.*
 
 /**
  * An activity representing a list of Pings. This activity
  * has different presentations for handset and tablet-size devices. On
  * handsets, the activity presents a list of items, which when touched,
- * lead to a [ItemDetailActivity] representing
+ * lead to a [ ItemDetailActivity ] representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-class ItemListActivity : AppCompatActivity() {
+class ChatActivity : AppCompatActivity() {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -33,28 +32,51 @@ class ItemListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_item_list)
 
+        //locale configuring
+        CommonUtils.updateActivity(this, baseContext)
+
+        setContentView(R.layout.activity_chat)
         setSupportActionBar(toolbar)
-        toolbar.title = title
 
-        if (item_detail_container != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            twoPane = true
-        }
+        //enable "turn back" button
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         setupRecyclerView(item_list)
     }
+
+    //------------- OPTIONS MENU
+
+    //TODO move it to common class
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    //TODO create common handler or move to common class
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                val changePageIntent = Intent(this, SettingsActivity::class.java)
+                startActivity(changePageIntent)
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    //--------------------------
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
         recyclerView.adapter = SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, twoPane)
     }
 
     class SimpleItemRecyclerViewAdapter(
-        private val parentActivity: ItemListActivity,
+        private val parentActivity: ChatActivity,
         private val values: List<DummyContent.DummyItem>,
         private val twoPane: Boolean
     ) :
@@ -64,7 +86,7 @@ class ItemListActivity : AppCompatActivity() {
 
         init {
             onClickListener = View.OnClickListener { v ->
-                val item = v.tag as DummyContent.DummyItem
+                /*val item = v.tag as DummyContent.DummyItem
                 if (twoPane) {
                     val fragment = ItemDetailFragment().apply {
                         arguments = Bundle().apply {
@@ -80,7 +102,8 @@ class ItemListActivity : AppCompatActivity() {
                         putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id)
                     }
                     v.context.startActivity(intent)
-                }
+                }*/
+                println("Click on message")
             }
         }
 

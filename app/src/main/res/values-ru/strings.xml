@@ -6,6 +6,7 @@
     <string name="ru_locale">Русский</string>
     <string name="select_locale_label">Выберите язык:</string>
     <string name="main_label">Нажмите на кнопку в правом нижнем углу, чтобы начать/открыть чат.</string>
-    <string name="chat_label">Текущий чат</string>
+    <string name="chat_name">Текущий чат</string>
     <string name="title_item_detail">Подробности</string>
+    <string name="settings_name">Настройки</string>
 </resources>
