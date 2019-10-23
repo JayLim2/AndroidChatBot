@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
-    tools:showIn="@layout/activity_main_horizontal">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="100dp"
+    tools:context=".SettingsActivity"
+    tools:showIn="@layout/activity_settings_horizontal">
 
-    <TextView
-        android:id="@+id/hello_world"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/en_locale_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Horizontal settings page"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_gravity="center"
+        android:text="@string/en_locale" />
+    <Button
+        android:id="@+id/ru_locale_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/ru_locale" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -6,16 +6,14 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.sergei.komarov.labs.androidchatbot.utils.CommonUtils
+import java.util.*
 
 class SettingsActivity : AppCompatActivity() {
-
-    lateinit var textView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +33,13 @@ class SettingsActivity : AppCompatActivity() {
             ).setAction("Action", null).show()
         }*/
 
-        textView = findViewById(R.id.hello_world)
         val myButton = findViewById<FloatingActionButton>(R.id.fab)
         myButton.setOnClickListener(onClickListener)
+
+        val enLocaleButton = findViewById<Button>(R.id.en_locale_button)
+        val ruLocaleButton = findViewById<Button>(R.id.ru_locale_button)
+        enLocaleButton.setOnClickListener(LocaleClickHandler(this, R.id.en_locale_button))
+        ruLocaleButton.setOnClickListener(LocaleClickHandler(this, R.id.ru_locale_button))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -69,5 +71,38 @@ class SettingsActivity : AppCompatActivity() {
             val changePageIntent = Intent(context, MainActivity::class.java)
             context.startActivity(changePageIntent)
         }
+    }
+
+    class LocaleClickHandler : View.OnClickListener {
+        var context: SettingsActivity
+        var id: Int
+
+        constructor(context: SettingsActivity, id: Int) {
+            this.context = context
+            this.id = id
+        }
+
+        override fun onClick(v: View?) {
+            val locale: Locale =
+                when (id) {
+                    R.id.en_locale_button -> Locale("en")
+                    R.id.ru_locale_button -> Locale("ru")
+                    else -> Locale("en")
+                }
+            context.changeLocale(locale)
+        }
+    }
+
+    private fun changeLocale(locale: Locale) {
+        val configuration = Configuration()
+        configuration.setLocale(locale)
+        baseContext.resources
+            .updateConfiguration(
+                configuration,
+                baseContext
+                    .resources
+                    .displayMetrics
+            )
+        setTitle(R.string.app_name)
     }
 }

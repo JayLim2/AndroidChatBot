@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Собеседник</string>
+    <string name="action_settings">Настройки</string>
+    <string name="en_locale">English</string>
+    <string name="ru_locale">Русск</string>
+</resources>
