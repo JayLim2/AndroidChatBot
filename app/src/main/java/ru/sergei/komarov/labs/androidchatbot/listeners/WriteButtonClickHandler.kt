@@ -1,8 +1,10 @@
 package ru.sergei.komarov.labs.androidchatbot.listeners
 
+import android.content.Intent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import ru.sergei.komarov.labs.androidchatbot.ItemListActivity
 
 class WriteButtonClickHandler<T : AppCompatActivity> : View.OnClickListener {
     var context: T
@@ -12,10 +14,15 @@ class WriteButtonClickHandler<T : AppCompatActivity> : View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-        Snackbar.make(
-            view,
-            "You can't create new chat.",
-            Snackbar.LENGTH_LONG
-        ).setAction("Action", null).show()
+        val intent = Intent(context, ItemListActivity::class.java)
+        context.startActivity(intent)
+
+        if(false) {
+            Snackbar.make(
+                view,
+                "You can't create new chat.",
+                Snackbar.LENGTH_LONG
+            ).setAction("Action", null).show()
+        }
     }
 }
