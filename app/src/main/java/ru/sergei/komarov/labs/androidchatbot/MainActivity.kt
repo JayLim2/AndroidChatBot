@@ -1,6 +1,7 @@
 package ru.sergei.komarov.labs.androidchatbot
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -17,6 +18,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //locale configuring
+        CommonUtils.updateActivity(this, baseContext)
+
         val layoutId =
             if (CommonUtils.isVerticalOrientation(resources))
                 R.layout.activity_main

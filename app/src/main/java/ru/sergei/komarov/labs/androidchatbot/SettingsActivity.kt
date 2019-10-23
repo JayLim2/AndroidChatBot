@@ -1,5 +1,6 @@
 package ru.sergei.komarov.labs.androidchatbot
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
@@ -17,8 +19,15 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //get orientation
+        val orientationIsVertical = CommonUtils.isVerticalOrientation(resources)
+
+        //locale configuring
+        CommonUtils.updateActivity(this, baseContext)
+
         val layoutId =
-            if (CommonUtils.isVerticalOrientation(resources))
+            if (orientationIsVertical)
                 R.layout.activity_settings
             else
                 R.layout.activity_settings_horizontal
@@ -36,8 +45,17 @@ class SettingsActivity : AppCompatActivity() {
         val myButton = findViewById<FloatingActionButton>(R.id.fab)
         myButton.setOnClickListener(onClickListener)
 
-        val enLocaleButton = findViewById<Button>(R.id.en_locale_button)
-        val ruLocaleButton = findViewById<Button>(R.id.ru_locale_button)
+        val enLocaleButton =
+            if (orientationIsVertical)
+                findViewById<ImageButton>(R.id.en_locale_button)
+            else
+                findViewById<Button>(R.id.en_locale_button)
+        val ruLocaleButton =
+            if (orientationIsVertical)
+                findViewById<ImageButton>(R.id.ru_locale_button)
+            else
+                findViewById<Button>(R.id.ru_locale_button)
+
         enLocaleButton.setOnClickListener(LocaleClickHandler(this, R.id.en_locale_button))
         ruLocaleButton.setOnClickListener(LocaleClickHandler(this, R.id.ru_locale_button))
     }
@@ -89,20 +107,8 @@ class SettingsActivity : AppCompatActivity() {
                     R.id.ru_locale_button -> Locale("ru")
                     else -> Locale("en")
                 }
-            context.changeLocale(locale)
+            CommonUtils.changeLocale(locale)
+            context.recreate()
         }
-    }
-
-    private fun changeLocale(locale: Locale) {
-        val configuration = Configuration()
-        configuration.setLocale(locale)
-        baseContext.resources
-            .updateConfiguration(
-                configuration,
-                baseContext
-                    .resources
-                    .displayMetrics
-            )
-        setTitle(R.string.app_name)
     }
 }

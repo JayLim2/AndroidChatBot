@@ -5,4 +5,5 @@
     <string name="en_locale">English</string>
     <string name="ru_locale">Русский</string>
     <string name="select_locale_label">Выберите язык:</string>
+    <string name="hello_world">Привет, мир!</string>
 </resources>

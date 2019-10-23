@@ -14,28 +14,33 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/select_locale_label" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="20dp"
         android:layout_weight="1"
+        android:gravity="center"
         android:orientation="horizontal">
-        <Button
+
+        <ImageButton
             android:id="@+id/en_locale_button"
             style="@style/Widget.AppCompat.Button"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
+            android:contentDescription="@string/en_locale"
+            android:src="@drawable/en_icon"
             android:text="@string/en_locale" />
-        <Button
+
+        <ImageButton
             android:id="@+id/ru_locale_button"
             style="@style/Widget.AppCompat.Button"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
+            android:contentDescription="@string/ru_locale"
+            android:src="@drawable/ru_icon"
             android:text="@string/ru_locale" />
     </LinearLayout>
 
