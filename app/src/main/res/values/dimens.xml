@@ -2,5 +2,9 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="app_bar_height">200dp</dimen>
     <dimen name="item_width">200dp</dimen>
-    <dimen name="text_margin">16dp</dimen>
+    <dimen name="text_margin">5dp</dimen>
+    <dimen name="message_padding">16dp</dimen>
+    <dimen name="message_max_width">300dp</dimen>
+    <dimen name="chat_avatar_width">48dp</dimen>
+    <dimen name="chat_avatar_height">48dp</dimen>
 </resources>

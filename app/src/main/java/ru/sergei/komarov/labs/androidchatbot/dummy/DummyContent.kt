@@ -36,7 +36,13 @@ object DummyContent {
     }
 
     private fun createDummyItem(position: Int): DummyItem {
-        return DummyItem(position.toString(), "Item " + position, makeDetails(position))
+        val dummy = "Item "
+        var prefix = dummy
+        val k = 25
+        for (i in 0..k) {
+            prefix += dummy
+        }
+        return DummyItem(position.toString(), prefix + position, makeDetails(position))
     }
 
     private fun makeDetails(position: Int): String {
