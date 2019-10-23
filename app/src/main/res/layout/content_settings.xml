@@ -4,23 +4,39 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="100dp"
+    android:paddingTop="90dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingBottom="20dp"
     tools:context=".SettingsActivity"
     tools:showIn="@layout/activity_settings">
 
-    <Button
-        android:id="@+id/en_locale_button"
-        style="@style/Widget.AppCompat.Button"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/en_locale" />
-    <Button
-        android:id="@+id/ru_locale_button"
-        style="@style/Widget.AppCompat.Button"
+        android:text="@string/select_locale_label" />
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/ru_locale" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/en_locale_button"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:text="@string/en_locale" />
+        <Button
+            android:id="@+id/ru_locale_button"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:text="@string/ru_locale" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -3,4 +3,5 @@
     <string name="app_name">ChatBot</string>
     <string name="en_locale">English</string>
     <string name="ru_locale">Русский</string>
+    <string name="select_locale_label">Select language:</string>
 </resources>
