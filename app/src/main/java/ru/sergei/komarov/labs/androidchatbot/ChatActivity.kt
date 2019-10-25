@@ -50,7 +50,7 @@ class ChatActivity : AppCompatActivity() {
         messageInputView.onFocusChangeListener = MessageInputFocusHandler(messageInputLayout, messageInputHintText)
 
         val sendMessageButton = findViewById<ImageButton>(R.id.send_button)
-        sendMessageButton.setOnClickListener(SendMessageButtonClickHandler(messageInputView, item_list, messageInputHintText))
+        sendMessageButton.setOnClickListener(SendMessageButtonClickHandler(this, messageInputView, item_list, messageInputHintText))
     }
 
     //------------- OPTIONS MENU

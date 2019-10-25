@@ -1,0 +1,7 @@
+CREATE TABLE messages
+(
+_id INTEGER PRIMARY KEY AUTOINCREMENT,
+message TEXT,
+userId TEXT,
+date DATETIME
+)

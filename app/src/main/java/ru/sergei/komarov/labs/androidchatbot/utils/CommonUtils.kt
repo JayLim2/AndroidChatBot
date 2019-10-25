@@ -3,11 +3,14 @@ package ru.sergei.komarov.labs.androidchatbot.utils
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import ru.sergei.komarov.labs.androidchatbot.ChatActivity
-import ru.sergei.komarov.labs.androidchatbot.R
 import ru.sergei.komarov.labs.androidchatbot.SettingsActivity
 import java.util.*
+import android.database.sqlite.SQLiteException
+import ru.sergei.komarov.labs.androidchatbot.R
+import ru.sergei.komarov.labs.androidchatbot.services.DatabaseService
 
 class CommonUtils {
     companion object {
@@ -43,6 +46,19 @@ class CommonUtils {
                     else -> R.string.app_name
                 }
             activity.setTitle(titleId)
+        }
+
+        fun getDatabaseInstance(context: Context?): SQLiteDatabase {
+            val dbHelper = DatabaseService(context)
+
+            val db =
+                try {
+                    dbHelper.writableDatabase
+                } catch (ex: SQLiteException) {
+                    ex.printStackTrace()
+                    dbHelper.readableDatabase
+                }
+            return db
         }
     }
 }
