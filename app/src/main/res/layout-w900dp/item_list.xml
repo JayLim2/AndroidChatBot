@@ -28,7 +28,7 @@
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context="ru.sergei.komarov.labs.androidchatbot.ChatActivity"
-        tools:listitem="@layout/chat_system_message" />
+        tools:listitem="@layout/chat_message" />
 
     <FrameLayout
         android:id="@+id/item_detail_container"

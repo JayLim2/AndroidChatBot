@@ -10,4 +10,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".ChatActivity"
-    tools:listitem="@layout/chat_system_message" />
+    tools:listitem="@layout/chat_message" />

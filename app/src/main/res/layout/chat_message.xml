@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="left"
+    android:gravity="start"
     android:orientation="horizontal">
 
     <ImageView
@@ -24,5 +24,15 @@
         android:textColor="@color/colorBlack"
         android:padding="@dimen/message_padding"
         android:textAppearance="?attr/textAppearanceListItem" />
+
+    <ImageView
+        android:id="@+id/avatar_right"
+        android:layout_width="@dimen/chat_avatar_width"
+        android:layout_height="@dimen/chat_avatar_height"
+        android:layout_margin="@dimen/text_margin"
+        android:background="@color/colorWhite"
+        android:src="@drawable/icon_chat_anonymous"
+        android:contentDescription="UserAvatar"
+        android:visibility="invisible" />
 
 </LinearLayout>

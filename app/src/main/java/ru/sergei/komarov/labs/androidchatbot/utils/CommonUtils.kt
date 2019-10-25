@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import ru.sergei.komarov.labs.androidchatbot.ChatActivity
-import ru.sergei.komarov.labs.androidchatbot.MainActivity
 import ru.sergei.komarov.labs.androidchatbot.R
 import ru.sergei.komarov.labs.androidchatbot.SettingsActivity
 import java.util.*
@@ -13,6 +12,11 @@ import java.util.*
 class CommonUtils {
     companion object {
         var DEFAULT_LOCALE: Locale? = Locale("ru")
+        var IS_SYSTEM_MESSAGE: Boolean = false
+
+        fun revertIsSystemMessage() {
+            IS_SYSTEM_MESSAGE = !IS_SYSTEM_MESSAGE
+        }
 
         fun isVerticalOrientation(resources: Resources): Boolean {
             return resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT

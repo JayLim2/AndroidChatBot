@@ -9,4 +9,5 @@
     <string name="chat_name">Текущий чат</string>
     <string name="title_item_detail">Подробности</string>
     <string name="settings_name">Настройки</string>
+    <string name="input_message_hint">Введите сообщение</string>
 </resources>

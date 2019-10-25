@@ -9,4 +9,5 @@
     <string name="chat_name">Current chat</string>
     <string name="title_item_detail">Item Detail</string>
     <string name="settings_name">Settings</string>
+    <string name="input_message_hint">Input message</string>
 </resources>

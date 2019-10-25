@@ -7,4 +7,5 @@
     <dimen name="message_max_width">300dp</dimen>
     <dimen name="chat_avatar_width">48dp</dimen>
     <dimen name="chat_avatar_height">48dp</dimen>
+    <dimen name="input_message_padding">10dp</dimen>
 </resources>
