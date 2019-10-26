@@ -3,6 +3,7 @@ package ru.sergei.komarov.labs.androidchatbot.dao
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import ru.sergei.komarov.labs.androidchatbot.models.Message
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class MessagesDAOImpl : DAO<Message> {
@@ -37,7 +38,43 @@ class MessagesDAOImpl : DAO<Message> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getById(id: Int) {
+    override fun getById(id: Int): Message? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return null
+    }
+
+    override fun getAll(): List<Message> {
+        val messages: MutableList<Message> = ArrayList()
+
+        val cursor = dbInstance.query(
+            TABLE_NAME, null, null, null, null, null, null, null
+        )
+
+        for (columnName in cursor.columnNames) {
+            println("COLUMN: " + columnName)
+        }
+
+        println(cursor.count)
+        println(cursor.columnCount)
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast) {
+                val message = cursor.getString(cursor.getColumnIndex("message"))
+                val userId = cursor.getString(cursor.getColumnIndex("userId"))
+                val date = cursor.getString(cursor.getColumnIndex("date"))
+
+                val messageItem = Message(
+                    message,
+                    Integer.parseInt(userId),
+                    LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
+                )
+                messages.add(messageItem)
+
+                cursor.moveToNext()
+            }
+            cursor.close()
+        }
+
+        return messages
     }
 }

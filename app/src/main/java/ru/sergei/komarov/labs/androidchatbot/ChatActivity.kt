@@ -2,23 +2,21 @@ package ru.sergei.komarov.labs.androidchatbot
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.TextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-
-import ru.sergei.komarov.labs.androidchatbot.dummy.DummyContent
 import kotlinx.android.synthetic.main.activity_chat.*
-import kotlinx.android.synthetic.main.chat_message.view.*
 import kotlinx.android.synthetic.main.item_list.*
 import ru.sergei.komarov.labs.androidchatbot.adapters.ChatViewAdapter
+import ru.sergei.komarov.labs.androidchatbot.dao.MessagesDAOImpl
+import ru.sergei.komarov.labs.androidchatbot.dummy.DummyContent
 import ru.sergei.komarov.labs.androidchatbot.listeners.MessageInputFocusHandler
 import ru.sergei.komarov.labs.androidchatbot.listeners.SendMessageButtonClickHandler
 import ru.sergei.komarov.labs.androidchatbot.utils.CommonUtils
-import java.util.*
 
 /**
  * An activity representing a list of Pings. This activity
@@ -80,6 +78,19 @@ class ChatActivity : AppCompatActivity() {
     //--------------------------
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
+        val dbInstance = CommonUtils.getDatabaseInstance(this)
+        val loadedMessages = MessagesDAOImpl(dbInstance).getAll()
+
+        for (loadedMessage in loadedMessages) {
+            DummyContent.addItem(
+                DummyContent.DummyItem(
+                    loadedMessage.userId == 0,
+                    loadedMessage.message,
+                    ""
+                )
+            )
+        }
+
         recyclerView.adapter = ChatViewAdapter(this, DummyContent.ITEMS)
     }
 
