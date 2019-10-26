@@ -7,9 +7,9 @@ import ru.sergei.komarov.labs.androidchatbot.ChatActivity
 import ru.sergei.komarov.labs.androidchatbot.dao.MessagesDAOImpl
 import ru.sergei.komarov.labs.androidchatbot.dummy.DummyContent
 import ru.sergei.komarov.labs.androidchatbot.models.Message
+import ru.sergei.komarov.labs.androidchatbot.utils.BotResponseGenerator
 import ru.sergei.komarov.labs.androidchatbot.utils.CommonUtils
 import java.time.LocalDateTime
-import java.util.*
 
 class SendMessageButtonClickHandler : View.OnClickListener {
     private val chatActivityContext: ChatActivity
@@ -33,25 +33,30 @@ class SendMessageButtonClickHandler : View.OnClickListener {
         messagesDAOImpl = MessagesDAOImpl(CommonUtils.getDatabaseInstance(chatActivityContext))
     }
 
-    override fun onClick(v: View?) {
-        val message = messageInputField.text.toString()
+    private fun putMessage(isSystemMessage:Boolean, message:String) {
         DummyContent.addItem(
             DummyContent.createDummyItemByData(
-                CommonUtils.IS_SYSTEM_MESSAGE,
+                isSystemMessage,
                 message
             )
         )
 
         messagesDAOImpl.insert(Message(
             message,
-            Random().nextInt(1000),
+            if(isSystemMessage) 0 else 1,
             LocalDateTime.now()
         ))
+    }
+
+    override fun onClick(v: View?) {
+        val message = messageInputField.text.toString()
+        putMessage(false, message)
+
+        val botMessage = BotResponseGenerator.getAnswer(message)
+        putMessage(true, botMessage)
 
         val totalItemsCount = DummyContent.ITEMS.count()
         recyclerView.adapter!!.notifyItemInserted(totalItemsCount)
-
-        CommonUtils.revertIsSystemMessage()
 
         messageInputField.hint = hintText
         messageInputField.text = null

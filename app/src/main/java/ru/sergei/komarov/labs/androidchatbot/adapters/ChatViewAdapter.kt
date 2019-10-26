@@ -54,7 +54,7 @@ class ChatViewAdapter(
         holder.contentView.text = item.content
 
         val layout = holder.itemView as LinearLayout
-        val isUserMessage = item.isSystemMessage
+        val isUserMessage = !item.isSystemMessage
         if (isUserMessage) {
             layout.gravity = Gravity.END
 
