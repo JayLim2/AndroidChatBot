@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
@@ -16,6 +18,7 @@ import ru.sergei.komarov.labs.androidchatbot.dao.MessagesDAOImpl
 import ru.sergei.komarov.labs.androidchatbot.dummy.DummyContent
 import ru.sergei.komarov.labs.androidchatbot.listeners.MessageInputFocusHandler
 import ru.sergei.komarov.labs.androidchatbot.listeners.SendMessageButtonClickHandler
+import ru.sergei.komarov.labs.androidchatbot.rest.Client
 import ru.sergei.komarov.labs.androidchatbot.utils.CommonUtils
 
 /**
@@ -49,6 +52,27 @@ class ChatActivity : AppCompatActivity() {
 
         val sendMessageButton = findViewById<ImageButton>(R.id.send_button)
         sendMessageButton.setOnClickListener(SendMessageButtonClickHandler(this, messageInputView, item_list, messageInputHintText))
+
+        //loading messages
+        val animatedLoader = findViewById<ProgressBar>(R.id.animated_loader)
+
+        Thread(Runnable {
+            this@ChatActivity.runOnUiThread {
+                this@ChatActivity.item_list.visibility = View.INVISIBLE
+            }
+            animatedLoader.visibility = View.VISIBLE
+
+            while (Client.value == null) {
+                continue
+            }
+
+            this@ChatActivity.runOnUiThread {
+                this@ChatActivity.item_list.visibility = View.VISIBLE
+            }
+            animatedLoader.visibility = View.INVISIBLE
+        }).start()
+
+        Client.loadMessages()
     }
 
     //------------- OPTIONS MENU

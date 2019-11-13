@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.sergei.komarov.labs.androidchatbot.listeners.WriteButtonClickHandler
-import ru.sergei.komarov.labs.androidchatbot.rest.Client
 import ru.sergei.komarov.labs.androidchatbot.utils.CommonUtils
 
 class MainActivity : AppCompatActivity() {
@@ -37,9 +36,6 @@ class MainActivity : AppCompatActivity() {
 
         val writeButton = findViewById<FloatingActionButton>(R.id.fab)
         writeButton.setOnClickListener(onClickListener)
-
-
-        Client.loadMessages()
     }
 
     //TODO move it to common class

@@ -1,5 +1,6 @@
 package ru.sergei.komarov.labs.androidchatbot.rest
 
+import com.google.gson.JsonArray
 import okhttp3.*
 import ru.sergei.komarov.labs.androidchatbot.models.Message
 import ru.sergei.komarov.labs.androidchatbot.utils.GsonConverter
@@ -16,6 +17,8 @@ class Client {
         private const val LOAD_ALL_BASE_LINK = "${BASE_LINK}get/all"
         private const val SAVE_BASE_LINK = "${BASE_LINK}save/"
         private const val SAVE_ALL_LINK = "${BASE_LINK}save/all/"
+
+        var value: JsonArray? = null
 
         fun loadMessages(): List<Message> {
 
@@ -56,6 +59,7 @@ class Client {
                     jsonArray?.let {
                         GsonConverter.println(it)
                     }
+                    value = jsonArray
                 }
             })
         }
