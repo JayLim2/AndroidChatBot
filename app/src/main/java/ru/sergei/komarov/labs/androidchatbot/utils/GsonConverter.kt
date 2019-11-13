@@ -1,6 +1,7 @@
 package ru.sergei.komarov.labs.androidchatbot.utils
 
 import com.google.gson.*
+import com.google.gson.reflect.TypeToken
 
 class GsonConverter {
 
@@ -8,6 +9,15 @@ class GsonConverter {
 
         private val GSON = GsonBuilder().setPrettyPrinting().create()
         private val PARSER = JsonParser()
+
+        fun <T> jsonArrayToList(jsonARray: JsonArray): List<T> {
+            val type = object : TypeToken<List<T>>() {}.type
+            val list: List<T> = GSON.fromJson(
+                jsonARray,
+                type
+            )
+            return list
+        }
 
         fun parseToJsonObject(value: String): JsonObject {
             return parse(value).asJsonObject

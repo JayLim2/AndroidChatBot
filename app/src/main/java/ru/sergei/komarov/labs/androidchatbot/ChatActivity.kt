@@ -18,6 +18,7 @@ import ru.sergei.komarov.labs.androidchatbot.dao.MessagesDAOImpl
 import ru.sergei.komarov.labs.androidchatbot.dummy.DummyContent
 import ru.sergei.komarov.labs.androidchatbot.listeners.MessageInputFocusHandler
 import ru.sergei.komarov.labs.androidchatbot.listeners.SendMessageButtonClickHandler
+import ru.sergei.komarov.labs.androidchatbot.models.Message
 import ru.sergei.komarov.labs.androidchatbot.rest.Client
 import ru.sergei.komarov.labs.androidchatbot.utils.CommonUtils
 
@@ -43,36 +44,55 @@ class ChatActivity : AppCompatActivity() {
         //enable "turn back" button
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        setupRecyclerView(item_list)
-
-        val messageInputLayout = findViewById<TextInputLayout>(R.id.message_input_layout)
-        val messageInputView = findViewById<TextInputEditText>(R.id.message_input)
-        val messageInputHintText = resources.getString(R.string.input_message_hint)
-        messageInputView.onFocusChangeListener = MessageInputFocusHandler(messageInputLayout, messageInputHintText)
-
-        val sendMessageButton = findViewById<ImageButton>(R.id.send_button)
-        sendMessageButton.setOnClickListener(SendMessageButtonClickHandler(this, messageInputView, item_list, messageInputHintText))
-
         //loading messages
-        val animatedLoader = findViewById<ProgressBar>(R.id.animated_loader)
+        val dbInstance = CommonUtils.getDatabaseInstance(this)
+        val dao = MessagesDAOImpl(dbInstance)
 
+        val animatedLoader = findViewById<ProgressBar>(R.id.animated_loader)
+        val currentRequestId = Client.loadMessages()
+        var loadedData: MutableList<Message>?
         Thread(Runnable {
             this@ChatActivity.runOnUiThread {
                 this@ChatActivity.item_list.visibility = View.INVISIBLE
             }
             animatedLoader.visibility = View.VISIBLE
 
-            while (Client.value == null) {
-                continue
+            loadedData = Client.getLoadedMessages(currentRequestId)
+            while (loadedData == null) {
+                Thread.sleep(1000)
+                loadedData = Client.getLoadedMessages(currentRequestId)
             }
 
+            //save to database
+            for (message in loadedData!!) {
+                dao.insert(message)
+            }
+
+            //render
             this@ChatActivity.runOnUiThread {
                 this@ChatActivity.item_list.visibility = View.VISIBLE
             }
             animatedLoader.visibility = View.INVISIBLE
         }).start()
 
-        Client.loadMessages()
+        //create interface
+        setupRecyclerView(item_list)
+
+        val messageInputLayout = findViewById<TextInputLayout>(R.id.message_input_layout)
+        val messageInputView = findViewById<TextInputEditText>(R.id.message_input)
+        val messageInputHintText = resources.getString(R.string.input_message_hint)
+        messageInputView.onFocusChangeListener =
+            MessageInputFocusHandler(messageInputLayout, messageInputHintText)
+
+        val sendMessageButton = findViewById<ImageButton>(R.id.send_button)
+        sendMessageButton.setOnClickListener(
+            SendMessageButtonClickHandler(
+                this,
+                messageInputView,
+                item_list,
+                messageInputHintText
+            )
+        )
     }
 
     //------------- OPTIONS MENU
@@ -108,7 +128,7 @@ class ChatActivity : AppCompatActivity() {
         for (loadedMessage in loadedMessages) {
             DummyContent.addItem(
                 DummyContent.DummyItem(
-                    loadedMessage.userId == 0,
+                    loadedMessage.userId == "SYSTEM",
                     loadedMessage.message,
                     ""
                 )

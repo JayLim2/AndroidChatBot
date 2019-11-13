@@ -3,6 +3,7 @@ package ru.sergei.komarov.labs.androidchatbot.dao
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import ru.sergei.komarov.labs.androidchatbot.models.Message
+import ru.sergei.komarov.labs.androidchatbot.rest.Client
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -59,14 +60,16 @@ class MessagesDAOImpl : DAO<Message> {
 
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast) {
+                val id = cursor.getInt(cursor.getColumnIndex("_id"))
                 val message = cursor.getString(cursor.getColumnIndex("message"))
                 val userId = cursor.getString(cursor.getColumnIndex("userId"))
                 val date = cursor.getString(cursor.getColumnIndex("date"))
 
                 val messageItem = Message(
+                    id,
                     message,
-                    Integer.parseInt(userId),
-                    LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
+                    userId,
+                    LocalDateTime.parse(date, Client.DATE_TIME_FORMATTER)
                 )
                 messages.add(messageItem)
 
