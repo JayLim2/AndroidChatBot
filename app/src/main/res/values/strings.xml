@@ -14,4 +14,8 @@
     <string name="main_label">Touch button at bottom right corner of screen to start/open chat</string>
     <string name="title_item_detail">Item Detail</string>
     <string name="input_message_hint">Input message</string>
+    <string name="login_label">Login:</string>
+    <string name="password_label">Password:</string>
+    <string name="input_login_hint">Your username</string>
+    <string name="input_password_hint">Your password</string>
 </resources>

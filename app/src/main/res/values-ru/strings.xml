@@ -10,4 +10,8 @@
     <string name="title_item_detail">Подробности</string>
     <string name="settings_name">Настройки</string>
     <string name="input_message_hint">Введите сообщение</string>
+    <string name="login_label">Логин:</string>
+    <string name="password_label">Пароль:</string>
+    <string name="input_login_hint">Ваше имя в системе</string>
+    <string name="input_password_hint">Ваш пароль в системе</string>
 </resources>
