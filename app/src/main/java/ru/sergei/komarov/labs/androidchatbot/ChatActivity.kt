@@ -39,8 +39,9 @@ class ChatActivity : AppCompatActivity() {
         CommonUtils.updateActivity(this, baseContext)
 
         setContentView(R.layout.activity_chat)
-        setSupportActionBar(toolbar)
 
+        //action bar
+        setSupportActionBar(toolbar)
         //enable "turn back" button
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
@@ -65,12 +66,22 @@ class ChatActivity : AppCompatActivity() {
 
             //save to database
             for (message in loadedData!!) {
+                //insert to local DB
                 dao.insert(message)
+
+                //insert to dummy content (observable content list)
+                DummyContent.addItem(
+                    DummyContent.createDummyItemByData(
+                        message.userId == "SYSTEM",
+                        message.message
+                    )
+                )
             }
 
             //render
             this@ChatActivity.runOnUiThread {
                 this@ChatActivity.item_list.visibility = View.VISIBLE
+                item_list.adapter!!.notifyItemInserted(DummyContent.ITEMS.count())
             }
             animatedLoader.visibility = View.INVISIBLE
         }).start()

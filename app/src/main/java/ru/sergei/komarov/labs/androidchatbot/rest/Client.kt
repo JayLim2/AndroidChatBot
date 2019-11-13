@@ -1,5 +1,6 @@
 package ru.sergei.komarov.labs.androidchatbot.rest
 
+import com.google.gson.JsonObject
 import okhttp3.*
 import ru.sergei.komarov.labs.androidchatbot.models.Message
 import ru.sergei.komarov.labs.androidchatbot.utils.GsonConverter
@@ -12,7 +13,7 @@ import kotlin.collections.ArrayList
 class Client {
 
     companion object {
-        val DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val DATE_TIME_FORMATTER = DateTimeFormatter.ISO_DATE_TIME
         private val OK_HTTP_CLIENT = OkHttpClient()
 
         private var currentRequest: Int = 1
@@ -22,7 +23,7 @@ class Client {
         private const val BASE_LINK = "$HOST/api/messages/"
         private const val LOAD_BASE_LINK = "${BASE_LINK}get/"
         private const val LOAD_ALL_BASE_LINK = "${BASE_LINK}get/all"
-        private const val SAVE_BASE_LINK = "${BASE_LINK}save/"
+        private const val SAVE_BASE_LINK = "${BASE_LINK}save"
         private const val SAVE_ALL_LINK = "${BASE_LINK}save/all/"
 
         fun getLoadedMessages(requestId: Int): MutableList<Message>? {
@@ -54,12 +55,23 @@ class Client {
 
         fun saveMessage(message: Message) {
 
-            saveRequest(SAVE_BASE_LINK)
+            saveRequest(SAVE_BASE_LINK, message)
         }
 
-        private fun saveRequest(url: String) {
+        private fun saveRequest(url: String, message: Message) {
+            val jsonMessage = JsonObject()
+            jsonMessage.addProperty("message", message.message)
+            jsonMessage.addProperty("date", DATE_TIME_FORMATTER.format(message.date))
+            jsonMessage.addProperty("userId", message.userId)
+
+            val requestBody = RequestBody.create(
+                MediaType.parse("application/json; charset=utf-8"),
+                GsonConverter.toString(jsonMessage)
+            )
+
             val request = Request.Builder()
                 .url(url)
+                .post(requestBody)
                 .build()
 
             OK_HTTP_CLIENT.newCall(request).enqueue(object : Callback {
@@ -70,6 +82,7 @@ class Client {
 
                 override fun onResponse(call: Call, response: Response) {
                     println("#### RESPONSE ####")
+                    println(response)
                 }
             })
         }

@@ -31,6 +31,10 @@ class GsonConverter {
             return PARSER.parse(value)
         }
 
+        fun toString(json: JsonElement): String {
+            return GSON.toJson(json)
+        }
+
         fun println(json: JsonElement) {
             println(GSON.toJson(json))
         }
