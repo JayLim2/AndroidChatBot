@@ -5,17 +5,27 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
+import ru.sergei.komarov.labs.androidchatbot.listeners.LoginButtonClickHandler
 import ru.sergei.komarov.labs.androidchatbot.listeners.WriteButtonClickHandler
 import ru.sergei.komarov.labs.androidchatbot.utils.CommonUtils
 
 class LoginActivity : AppCompatActivity() {
 
-    private val onClickListener: View.OnClickListener = WriteButtonClickHandler(this)
+    private val onWriteButtonClickListener: View.OnClickListener = WriteButtonClickHandler(this)
+    private val onLoginButtonClickListener: View.OnClickListener = LoginButtonClickHandler(this)
 
-    lateinit var textView: TextView
+    lateinit var loginInput: TextInputEditText
+    lateinit var passwordInput: TextInputEditText
+    lateinit var loginButton: Button
+    lateinit var writeButton: FloatingActionButton
+    lateinit var errorMessage: TextView
+    lateinit var animatedLoader: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,9 +33,19 @@ class LoginActivity : AppCompatActivity() {
         //locale configuring
         CommonUtils.updateActivity(this, baseContext)
 
+        //set content view
+        setContentView(R.layout.activity_login)
 
-        val writeButton = findViewById<FloatingActionButton>(R.id.fab)
-        writeButton.setOnClickListener(onClickListener)
+        //fetch controls
+        animatedLoader = findViewById(R.id.animated_loader)
+        errorMessage = findViewById(R.id.invalid_creds_error_msg)
+        loginInput = findViewById(R.id.login_input)
+        passwordInput = findViewById(R.id.password_input)
+        loginButton = findViewById(R.id.login_button)
+        writeButton = findViewById(R.id.fab)
+
+        loginButton.setOnClickListener(onLoginButtonClickListener)
+        writeButton.setOnClickListener(onWriteButtonClickListener)
     }
 
     //TODO move it to common class

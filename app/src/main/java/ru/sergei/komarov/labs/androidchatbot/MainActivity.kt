@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.sergei.komarov.labs.androidchatbot.listeners.WriteButtonClickHandler
+import ru.sergei.komarov.labs.androidchatbot.utils.CommonParameters
 import ru.sergei.komarov.labs.androidchatbot.utils.CommonUtils
 
 class MainActivity : AppCompatActivity() {
@@ -36,6 +37,9 @@ class MainActivity : AppCompatActivity() {
 
         val writeButton = findViewById<FloatingActionButton>(R.id.fab)
         writeButton.setOnClickListener(onClickListener)
+
+        //redirect to login
+        openLoginActivity()
     }
 
     //TODO move it to common class
@@ -57,6 +61,13 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun openLoginActivity() {
+        if (!CommonParameters.isAuthenticated()) {
+            val changePageIntent = Intent(this, LoginActivity::class.java)
+            startActivity(changePageIntent)
         }
     }
 }

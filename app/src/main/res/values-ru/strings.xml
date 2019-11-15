@@ -14,4 +14,6 @@
     <string name="password_label">Пароль:</string>
     <string name="input_login_hint">Ваше имя в системе</string>
     <string name="input_password_hint">Ваш пароль в системе</string>
+    <string name="login_button_label">Войти</string>
+    <string name="invalid_creds_error_msg">Неверный логин/пароль</string>
 </resources>

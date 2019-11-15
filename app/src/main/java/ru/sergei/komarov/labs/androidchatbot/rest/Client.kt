@@ -3,6 +3,7 @@ package ru.sergei.komarov.labs.androidchatbot.rest
 import com.google.gson.JsonObject
 import okhttp3.*
 import ru.sergei.komarov.labs.androidchatbot.models.Message
+import ru.sergei.komarov.labs.androidchatbot.utils.CommonParameters
 import ru.sergei.komarov.labs.androidchatbot.utils.GsonConverter
 import java.io.IOException
 import java.time.LocalDateTime
@@ -20,11 +21,11 @@ class Client {
         private val loadedDate: MutableMap<Int, MutableList<Message>> = TreeMap()
 
         private const val HOST = "https://androidchatbotserver.herokuapp.com"
-        private const val BASE_LINK = "$HOST/api/messages/"
-        private const val LOAD_BASE_LINK = "${BASE_LINK}get/"
-        private const val LOAD_ALL_BASE_LINK = "${BASE_LINK}get/all"
-        private const val SAVE_BASE_LINK = "${BASE_LINK}save"
-        private const val SAVE_ALL_LINK = "${BASE_LINK}save/all/"
+        private const val MESSAGES_BASE_LINK = "$HOST/api/messages/"
+        private const val LOAD_ALL_BASE_LINK = "${MESSAGES_BASE_LINK}get/all"
+        private const val SAVE_BASE_LINK = "${MESSAGES_BASE_LINK}save"
+        private const val USERS_BASE_LINK = "$HOST/api/users/"
+        private const val LOGIN_LINK = "${USERS_BASE_LINK}validate/credentials"
 
         fun getLoadedMessages(requestId: Int): MutableList<Message>? {
             return loadedDate[requestId]
@@ -33,29 +34,67 @@ class Client {
         private fun toNextRequestId() {
             //increment status number
             ++currentRequest
-            //reset current request id if limit exceed
+            //reset current loadRequest id if limit exceed
             if (currentRequest == Integer.MAX_VALUE) {
                 currentRequest = 1
             }
         }
 
         fun loadMessages(): Int {
-            //move to next request id
+            //move to next loadRequest id
             toNextRequestId()
-            //send request
-            request(LOAD_ALL_BASE_LINK)
+            //send loadRequest
+            loadRequest(LOAD_ALL_BASE_LINK)
             //return response
             return currentRequest
-        }
-
-        fun loadMessages(userId: String): List<Message> {
-
-            return ArrayList()
         }
 
         fun saveMessage(message: Message) {
 
             saveRequest(SAVE_BASE_LINK, message)
+        }
+
+        fun login(login: String, password: String): Boolean {
+
+            CommonParameters.authenticationResponse = null
+            CommonParameters.authentication = null
+
+            return loginRequest(login, password)
+        }
+
+        private fun loginRequest(login: String, password: String): Boolean {
+            val params = FormBody.Builder()
+                .add("login", login)
+                .add("password", password)
+                .build()
+
+            val request = Request.Builder()
+                .url(LOGIN_LINK)
+                .post(params)
+                .build()
+
+            OK_HTTP_CLIENT.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    println("#### LOGIN REQUEST FAILED ####")
+                    e.printStackTrace()
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    println("#### LOGIN RESPONSE ####")
+
+                    val authenticationResponse = response.body()?.string()
+
+                    println(authenticationResponse + " <- response")
+
+                    CommonParameters.authenticationResponse = authenticationResponse
+                    if (authenticationResponse == "true") {
+                        CommonParameters.authentication = "$login : $password"
+                    }
+                }
+            })
+
+            //FIXME return actual value!
+            return true
         }
 
         private fun saveRequest(url: String, message: Message) {
@@ -87,7 +126,7 @@ class Client {
             })
         }
 
-        private fun request(url: String) {
+        private fun loadRequest(url: String) {
             val request = Request.Builder()
                 .url(url)
                 .build()

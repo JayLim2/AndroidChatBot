@@ -18,4 +18,6 @@
     <string name="password_label">Password:</string>
     <string name="input_login_hint">Your username</string>
     <string name="input_password_hint">Your password</string>
+    <string name="login_button_label">Sign in</string>
+    <string name="invalid_creds_error_msg">Invalid username/password</string>
 </resources>
