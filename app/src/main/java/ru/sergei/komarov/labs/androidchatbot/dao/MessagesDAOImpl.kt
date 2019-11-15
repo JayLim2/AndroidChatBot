@@ -18,17 +18,28 @@ class MessagesDAOImpl : DAO<Message> {
     }
 
     override fun insert(message: Message) {
-        val contentValues = ContentValues()
-        contentValues.put("message", message.message)
-        contentValues.put("userId", message.userId)
-        contentValues.put("date", DateTimeFormatter.ISO_DATE_TIME.format(message.date))
-        val returnedId = dbInstance.insert(
-            TABLE_NAME,
-            null,
-            contentValues
-        )
+        val query = "SELECT _id FROM " + TABLE_NAME + " WHERE _id = " + message.id
+        val cursor = dbInstance.rawQuery(query, null)
+        val isExists = cursor.moveToFirst()
+        cursor.close()
 
-        println("message inserted with id = $returnedId")
+        if (!isExists) {
+            println("NOT EXISTS")
+            val contentValues = ContentValues()
+            contentValues.put("_id", message.id)
+            contentValues.put("message", message.message)
+            contentValues.put("userId", message.userId)
+            contentValues.put("date", DateTimeFormatter.ISO_DATE_TIME.format(message.date))
+            val returnedId = dbInstance.insert(
+                TABLE_NAME,
+                null,
+                contentValues
+            )
+
+            println("message inserted with id = $returnedId")
+        } else {
+            println("message with id = ${message.id} already exists")
+        }
     }
 
     override fun update(id: Int, message: Message) {

@@ -14,6 +14,7 @@ import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.item_list.*
 import ru.sergei.komarov.labs.androidchatbot.adapters.ChatViewAdapter
+import ru.sergei.komarov.labs.androidchatbot.comparators.MessagesComparator
 import ru.sergei.komarov.labs.androidchatbot.dao.MessagesDAOImpl
 import ru.sergei.komarov.labs.androidchatbot.dummy.DummyContent
 import ru.sergei.komarov.labs.androidchatbot.listeners.MessageInputFocusHandler
@@ -50,7 +51,6 @@ class ChatActivity : AppCompatActivity() {
         val dao = MessagesDAOImpl(dbInstance)
 
         val animatedLoader = findViewById<ProgressBar>(R.id.animated_loader)
-        val currentRequestId = Client.loadMessages()
         var loadedData: MutableList<Message>?
         Thread(Runnable {
             this@ChatActivity.runOnUiThread {
@@ -58,11 +58,13 @@ class ChatActivity : AppCompatActivity() {
             }
             animatedLoader.visibility = View.VISIBLE
 
-            loadedData = Client.getLoadedMessages(currentRequestId)
-            while (loadedData == null) {
-                Thread.sleep(1000)
-                loadedData = Client.getLoadedMessages(currentRequestId)
-            }
+            //clear dummy content assigned with item list on UI
+            DummyContent.ITEMS.clear()
+
+            //load data from server
+            loadedData = Client.loadMessages()
+            //sorting by date
+            loadedData!!.sortWith(MessagesComparator().reversed())
 
             //save to database
             for (message in loadedData!!) {
@@ -81,7 +83,7 @@ class ChatActivity : AppCompatActivity() {
             //render
             this@ChatActivity.runOnUiThread {
                 this@ChatActivity.item_list.visibility = View.VISIBLE
-                item_list.adapter!!.notifyItemInserted(DummyContent.ITEMS.count())
+                item_list.adapter!!.notifyItemInserted(loadedData!!.size)
             }
             animatedLoader.visibility = View.INVISIBLE
         }).start()

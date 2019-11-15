@@ -17,7 +17,6 @@ class Client {
         val DATE_TIME_FORMATTER = DateTimeFormatter.ISO_DATE_TIME
         private val OK_HTTP_CLIENT = OkHttpClient()
 
-        private var currentRequest: Int = 1
         private val loadedDate: MutableMap<Int, MutableList<Message>> = TreeMap()
 
         private const val HOST = "https://androidchatbotserver.herokuapp.com"
@@ -31,38 +30,25 @@ class Client {
             return loadedDate[requestId]
         }
 
-        private fun toNextRequestId() {
-            //increment status number
-            ++currentRequest
-            //reset current loadRequest id if limit exceed
-            if (currentRequest == Integer.MAX_VALUE) {
-                currentRequest = 1
-            }
+        fun loadMessages(): MutableList<Message> {
+
+            return loadRequest(LOAD_ALL_BASE_LINK)
         }
 
-        fun loadMessages(): Int {
-            //move to next loadRequest id
-            toNextRequestId()
-            //send loadRequest
-            loadRequest(LOAD_ALL_BASE_LINK)
-            //return response
-            return currentRequest
+        fun saveMessage(message: Message): Message {
+
+            return saveRequest(SAVE_BASE_LINK, message)
         }
 
-        fun saveMessage(message: Message) {
-
-            saveRequest(SAVE_BASE_LINK, message)
-        }
-
-        fun login(login: String, password: String): Boolean {
+        fun login(login: String, password: String) {
 
             CommonParameters.authenticationResponse = null
             CommonParameters.authentication = null
 
-            return loginRequest(login, password)
+            loginRequest(login, password)
         }
 
-        private fun loginRequest(login: String, password: String): Boolean {
+        private fun loginRequest(login: String, password: String) {
             val params = FormBody.Builder()
                 .add("login", login)
                 .add("password", password)
@@ -84,20 +70,15 @@ class Client {
 
                     val authenticationResponse = response.body()?.string()
 
-                    println(authenticationResponse + " <- response")
-
                     CommonParameters.authenticationResponse = authenticationResponse
                     if (authenticationResponse == "true") {
                         CommonParameters.authentication = "$login : $password"
                     }
                 }
             })
-
-            //FIXME return actual value!
-            return true
         }
 
-        private fun saveRequest(url: String, message: Message) {
+        private fun saveRequest(url: String, message: Message): Message {
             val jsonMessage = JsonObject()
             jsonMessage.addProperty("message", message.message)
             jsonMessage.addProperty("date", DATE_TIME_FORMATTER.format(message.date))
@@ -113,66 +94,50 @@ class Client {
                 .post(requestBody)
                 .build()
 
-            OK_HTTP_CLIENT.newCall(request).enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    println("#### FAILED ####")
-                    e.printStackTrace()
-                }
 
-                override fun onResponse(call: Call, response: Response) {
-                    println("#### RESPONSE ####")
-                    println(response)
-                }
-            })
+            val response = OK_HTTP_CLIENT.newCall(request).execute().body()?.string()
+            message.id = response?.let { Integer.parseInt(it) }
+
+            return message
         }
 
-        private fun loadRequest(url: String) {
+        private fun loadRequest(url: String): MutableList<Message> {
             val request = Request.Builder()
                 .url(url)
                 .build()
 
-            OK_HTTP_CLIENT.newCall(request).enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    println("#### FAILED ####")
-                    e.printStackTrace()
-                }
+            //get response as string
+            val response = OK_HTTP_CLIENT.newCall(request).execute().body()?.string()
 
-                override fun onResponse(call: Call, response: Response) {
-                    println("#### RESPONSE ####")
+            //convert to JsonArray
+            val jsonArray = response?.let {
+                GsonConverter.parseToJsonArray(it)
+            }
 
-                    val responseStr = response.body()?.string()
-                    val jsonArray = responseStr?.let {
-                        GsonConverter.parseToJsonArray(it)
+            //map "json" to "object"
+            val messages: MutableList<Message> = ArrayList(20)
+            if (jsonArray != null) {
+                for (jsonMessage in jsonArray) {
+                    try {
+                        val messageJsonObject = jsonMessage.asJsonObject
+                        val message = Message(
+                            messageJsonObject.get("id").asInt,
+                            messageJsonObject.get("message").asString,
+                            messageJsonObject.get("userId").asString,
+                            LocalDateTime.parse(
+                                messageJsonObject.get("date").asString,
+                                DATE_TIME_FORMATTER
+                            )
+                        )
+                        messages.add(message)
+                    } catch (e: Exception) {
+                        println("FAILED ON: \n")
+                        GsonConverter.println(jsonMessage)
+                        e.printStackTrace()
                     }
-
-                    //map "json" to "object"
-                    val messages: MutableList<Message> = ArrayList(20)
-                    if (jsonArray != null) {
-                        for (jsonMessage in jsonArray) {
-                            try {
-                                val messageJsonObject = jsonMessage.asJsonObject
-                                val message = Message(
-                                    messageJsonObject.get("id").asInt,
-                                    messageJsonObject.get("message").asString,
-                                    messageJsonObject.get("userId").asString,
-                                    LocalDateTime.parse(
-                                        messageJsonObject.get("date").asString,
-                                        DATE_TIME_FORMATTER
-                                    )
-                                )
-                                messages.add(message)
-                            } catch (e: Exception) {
-                                println("FAILED ON: \n")
-                                GsonConverter.println(jsonMessage)
-                                e.printStackTrace()
-                            }
-                        }
-                    }
-
-                    //set status as "data loaded"
-                    loadedDate[currentRequest] = messages
                 }
-            })
+            }
+            return messages
         }
     }
 
