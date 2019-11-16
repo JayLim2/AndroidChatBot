@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.item_list.*
 import ru.sergei.komarov.labs.androidchatbot.adapters.ChatViewAdapter
 import ru.sergei.komarov.labs.androidchatbot.comparators.MessagesComparator
 import ru.sergei.komarov.labs.androidchatbot.dao.MessagesDAOImpl
-import ru.sergei.komarov.labs.androidchatbot.dummy.DummyContent
+import ru.sergei.komarov.labs.androidchatbot.dummy.ChatContent
 import ru.sergei.komarov.labs.androidchatbot.listeners.MessageInputFocusHandler
 import ru.sergei.komarov.labs.androidchatbot.listeners.SendMessageButtonClickHandler
 import ru.sergei.komarov.labs.androidchatbot.models.Message
@@ -59,38 +59,30 @@ class ChatActivity : AppCompatActivity() {
             animatedLoader.visibility = View.VISIBLE
 
             //clear dummy content assigned with item list on UI
-            DummyContent.ITEMS.clear()
+            ChatContent.ITEMS.clear()
 
             //load data from server
             loadedData = Client.loadMessages()
-            //sorting by date
-            loadedData!!.sortWith(MessagesComparator().reversed())
 
             //save to database
             for (message in loadedData!!) {
                 //insert to local DB
                 dao.insert(message)
-
-                //insert to dummy content (observable content list)
-                DummyContent.addItem(
-                    DummyContent.createDummyItemByData(
-                        message.userId == "SYSTEM",
-                        message.message
-                    )
-                )
             }
 
             //render
             this@ChatActivity.runOnUiThread {
+                //initial synchronizing UI with local DB
+                setupRecyclerView(item_list)
+                //show messages list
                 this@ChatActivity.item_list.visibility = View.VISIBLE
+                //refresh UI
                 item_list.adapter!!.notifyItemInserted(loadedData!!.size)
             }
             animatedLoader.visibility = View.INVISIBLE
         }).start()
 
         //create interface
-        setupRecyclerView(item_list)
-
         val messageInputLayout = findViewById<TextInputLayout>(R.id.message_input_layout)
         val messageInputView = findViewById<TextInputEditText>(R.id.message_input)
         val messageInputHintText = resources.getString(R.string.input_message_hint)
@@ -136,11 +128,13 @@ class ChatActivity : AppCompatActivity() {
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
         val dbInstance = CommonUtils.getDatabaseInstance(this)
+
         val loadedMessages = MessagesDAOImpl(dbInstance).getAll()
+            .sortedWith(MessagesComparator())
 
         for (loadedMessage in loadedMessages) {
-            DummyContent.addItem(
-                DummyContent.DummyItem(
+            ChatContent.addItem(
+                ChatContent.ChatItem(
                     loadedMessage.userId == "SYSTEM",
                     loadedMessage.message,
                     ""
@@ -148,7 +142,7 @@ class ChatActivity : AppCompatActivity() {
             )
         }
 
-        recyclerView.adapter = ChatViewAdapter(this, DummyContent.ITEMS)
+        recyclerView.adapter = ChatViewAdapter(this, ChatContent.ITEMS)
     }
 
 }

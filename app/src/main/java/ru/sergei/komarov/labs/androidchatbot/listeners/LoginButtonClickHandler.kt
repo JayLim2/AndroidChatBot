@@ -29,7 +29,7 @@ class LoginButtonClickHandler : View.OnClickListener {
             //send login request and waiting
             Client.login(login, password)
             while (!CommonParameters.isAuthenticationResponseReceived()) {
-                Thread.sleep(500)
+                Thread.sleep(100)
             }
 
             context.runOnUiThread {

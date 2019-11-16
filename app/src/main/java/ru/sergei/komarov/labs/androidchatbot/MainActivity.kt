@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         textView = findViewById(R.id.hello_world)
 
-        val writeButton = findViewById<FloatingActionButton>(R.id.fab)
+        val writeButton = findViewById<FloatingActionButton>(R.id.write_button)
         writeButton.setOnClickListener(onClickListener)
 
         //redirect to login

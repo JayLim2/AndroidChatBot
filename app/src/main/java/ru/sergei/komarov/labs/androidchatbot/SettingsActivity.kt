@@ -38,7 +38,7 @@ class SettingsActivity : AppCompatActivity() {
         //enable "turn back" button
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        val writeButton = findViewById<FloatingActionButton>(R.id.fab)
+        val writeButton = findViewById<FloatingActionButton>(R.id.write_button)
         writeButton.setOnClickListener(onClickListener)
 
         val enLocaleButton =

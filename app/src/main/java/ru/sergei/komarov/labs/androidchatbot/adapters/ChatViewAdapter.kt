@@ -10,18 +10,18 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.chat_message.view.*
 import ru.sergei.komarov.labs.androidchatbot.ChatActivity
 import ru.sergei.komarov.labs.androidchatbot.R
-import ru.sergei.komarov.labs.androidchatbot.dummy.DummyContent
+import ru.sergei.komarov.labs.androidchatbot.dummy.ChatContent
 
 class ChatViewAdapter(
     private val parentActivity: ChatActivity,
-    private val values: List<DummyContent.DummyItem>
+    private val values: List<ChatContent.ChatItem>
 ) : RecyclerView.Adapter<ChatViewAdapter.ViewHolder>() {
 
     private val onClickListener: View.OnClickListener
 
     init {
         onClickListener = View.OnClickListener { v ->
-            /*val item = v.tag as DummyContent.DummyItem
+            /*val item = v.tag as ChatContent.ChatItem
             if (twoPane) {
                 val fragment = ItemDetailFragment().apply {
                     arguments = Bundle().apply {

@@ -10,7 +10,7 @@ import ru.sergei.komarov.labs.androidchatbot.ChatActivity
 import ru.sergei.komarov.labs.androidchatbot.R
 import ru.sergei.komarov.labs.androidchatbot.SettingsActivity
 import ru.sergei.komarov.labs.androidchatbot.dao.MessagesDAOImpl
-import ru.sergei.komarov.labs.androidchatbot.dummy.DummyContent
+import ru.sergei.komarov.labs.androidchatbot.dummy.ChatContent
 import ru.sergei.komarov.labs.androidchatbot.models.Message
 import ru.sergei.komarov.labs.androidchatbot.rest.Client
 import ru.sergei.komarov.labs.androidchatbot.services.DatabaseService
@@ -69,21 +69,19 @@ class CommonUtils {
             messageObj: Message,
             messagesDAOImpl: MessagesDAOImpl
         ) {
-            Thread {
-                //save to server
-                val savedMessageObj: Message = Client.saveMessage(messageObj)
+            //save to server
+            val savedMessageObj: Message = Client.saveMessage(messageObj)
 
-                //save to local
-                messagesDAOImpl.insert(savedMessageObj)
+            //save to local
+            messagesDAOImpl.insert(savedMessageObj)
 
-                //save to dummy content
-                DummyContent.addItem(
-                    DummyContent.createDummyItemByData(
-                        savedMessageObj.userId == "SYSTEM",
-                        savedMessageObj.message
-                    )
+            //save to dummy content
+            ChatContent.addItem(
+                ChatContent.createChatItemByData(
+                    savedMessageObj.userId == "SYSTEM",
+                    savedMessageObj.message
                 )
-            }.start()
+            )
         }
     }
 }

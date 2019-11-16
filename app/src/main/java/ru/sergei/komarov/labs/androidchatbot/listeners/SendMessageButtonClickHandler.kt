@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import ru.sergei.komarov.labs.androidchatbot.ChatActivity
 import ru.sergei.komarov.labs.androidchatbot.dao.MessagesDAOImpl
-import ru.sergei.komarov.labs.androidchatbot.dummy.DummyContent
+import ru.sergei.komarov.labs.androidchatbot.dummy.ChatContent
 import ru.sergei.komarov.labs.androidchatbot.models.Message
 import ru.sergei.komarov.labs.androidchatbot.utils.BotResponseGenerator
 import ru.sergei.komarov.labs.androidchatbot.utils.CommonUtils
@@ -49,16 +49,22 @@ class SendMessageButtonClickHandler : View.OnClickListener {
 
 
     override fun onClick(v: View?) {
-        val message = messageInputField.text.toString()
-        putMessage(false, message)
+        Thread {
+            val message = messageInputField.text.toString()
+            putMessage(false, message)
 
-        val botMessage = BotResponseGenerator.getAnswer(message)
-        putMessage(true, botMessage)
+            val botMessage = BotResponseGenerator.getAnswer(message)
+            putMessage(true, botMessage)
 
-        val totalItemsCount = DummyContent.ITEMS.count()
-        recyclerView.adapter!!.notifyItemInserted(totalItemsCount)
+            chatActivityContext.runOnUiThread {
+                var k = ChatContent.ITEMS.size - 1
+                while (k <= ChatContent.ITEMS.size) {
+                    recyclerView.adapter!!.notifyItemInserted(k++)
+                }
 
-        messageInputField.hint = hintText
-        messageInputField.text = null
+                messageInputField.hint = hintText
+                messageInputField.text = null
+            }
+        }.start()
     }
 }

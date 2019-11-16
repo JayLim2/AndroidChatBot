@@ -47,25 +47,24 @@
         android:orientation="horizontal">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:theme="@style/TextInputLayoutAppearance"
             android:id="@+id/message_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:theme="@style/TextInputLayoutAppearance"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            >
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/message_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left"
                 android:background="@color/colorWhite"
-                android:padding="@dimen/input_message_padding"
-                android:hint="@string/input_message_hint" />
+                android:gravity="left"
+                android:hint="@string/input_message_hint"
+                android:padding="@dimen/input_message_padding" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
